@@ -2,51 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bird : MonoBehaviour
-{
-    public float upForce;           //Upward force of the "flap".
-    private bool isDead = false;    //Has the player collided with a wall?
+public class Bird : MonoBehaviour {
 
-    private Animator anim;          //Reference to the Animator component.
-    private Rigidbody2D rb2d;       //Holds a reference to the Rigidbody2D component of the bird.
+    public float upForce = 200f;
 
-    // Start is called before the first frame update
-    void Start()
+    private bool isDead = false;
+    private Rigidbody2D rb2d;
+    private Animator anim;
+
+    void Start () 
     {
-        //Get refernece to the Animator Component atttached to this GameObject.
-        anim = GetComponent<Animator>();
-        //Get and store a reference to the Rigidbody2D attached to this GameObject.
         rb2d = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        //Dont allow control if the bird has died.
+    void Update () 
+    { 
         if (isDead == false)
         {
-            //Look for input to trigger a "flap".
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown (0))
             {
-                //...tell the animator about it and then...
-                anim.SetTrigger("Flap");
-                //...zero out the birds current y velocity before...
                 rb2d.velocity = Vector2.zero;
-                //  new Vector2(rb2d.velocity.x, 0);
-                //..giving the bird some upward force
                 rb2d.AddForce(new Vector2(0, upForce));
+                anim.SetTrigger("Flap");
             }
         }
     }
-
-    void OnCollisionEnter2D(Collision2D other)
+    void OnCollisionEnter2D ()
     {
-        // Zero out the bird's velocity
-        rb2d.velocity = Vector2.zero;
-        // If the bird collides with something set it to dead...
         isDead = true;
-        //...tell the Animator about it...
-        anim.SetTrigger ("Die");
-        //...and tell the game control about it.
-        GameControl.instance.BirdDied();
+        anim.SetTrigger("Die");
     }
+ }
+  
